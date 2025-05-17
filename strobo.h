@@ -1,18 +1,17 @@
 #ifndef STROBO_H
 #define STROBO_H
 
-#define NUM_LAMPS 5
-
+#include "config.h"
 #include "effect_interface.h"
 
 class Strobo : public EffectInterface {
   public:
-    Strobo(DMXInterface* dmx);
+    Strobo(DMXInterface* dmx) : EffectInterface(dmx) {};
     void handleStrobo();
     void setStrobo(uint8_t brightness, bool state, int interval);
 
-    template <size_t N, size_t lamps>
-    void Strobo::setPattern(const bool (&pattern)[N][lamps]) {
+    template <size_t N>
+    void Strobo::setPattern(const bool (&pattern)[N][NUM_LAMPS]) {
       currentPattern = pattern;
       currentPatternRows = N;
       currentStep = 0;

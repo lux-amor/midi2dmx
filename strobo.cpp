@@ -1,7 +1,5 @@
 #include "strobo.h"
 
-Strobo::Strobo(DMXInterface* dmx) : EffectInterface(dmx) {}
-
 void Strobo::onStart(byte note, byte velocity) {
   brightness = min(255, max(0, 2*(note + 1)));
   float interval = (127 - velocity) * 2.5;
@@ -22,7 +20,7 @@ void Strobo::onUpdate() {
     #endif
     return;
   } else {
-    currentMask = currentPattern[currentStep];
+    setMask(currentPattern[currentStep]);
   }
 
   updateLights(0);

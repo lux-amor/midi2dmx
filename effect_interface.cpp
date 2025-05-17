@@ -1,11 +1,16 @@
 #include "effect_interface.h"
 
-EffectInterface::~EffectInterface() {
-  delete[] currentMask;
-}
-
-uint8_t EffectInterface::getValidBrightness(uint8_t brightness, unsigned long delta, int8_t offset) {
-  int actualBrightness = (int)brightness + delta + offset; 
+uint8_t EffectInterface::getValidBrightness(uint8_t brightness, float delta, int8_t offset) {
+  #ifdef ENABLE_SERIAL_DEBUG
+    Serial.println("Calculating valid brightness for:");
+    Serial.print("brightness: ");
+    Serial.println(brightness);
+    Serial.print("brightness delta: ");
+    Serial.println(delta);
+    Serial.print("pitchbend offset: ");
+    Serial.println(offset);
+  #endif
+  int actualBrightness = (int)(brightness + delta + offset); 
   if (actualBrightness <= 0) {
     #ifdef ENABLE_SERIAL_DEBUG
       Serial.println(F("Limit brightness to 0"));
@@ -18,6 +23,11 @@ uint8_t EffectInterface::getValidBrightness(uint8_t brightness, unsigned long de
     actualBrightness = 255;
   }
   return actualBrightness;
+}
+
+void EffectInterface::setMask(const bool (&values)[NUM_LAMPS]) {
+    static_assert(NUM_LAMPS > 0, "Mask cannot be empty");
+    memcpy(currentMask, values, NUM_LAMPS * sizeof(bool));
 }
 
 void EffectInterface::setPitchBendOffset(int bend) {
@@ -45,14 +55,14 @@ void EffectInterface::update() {
   }
 }
 
-void EffectInterface::updateLights(uint8_t brightnessOffset) {
+void EffectInterface::updateLights(float brightnessOffset) {
   if (currentMask != nullptr) {
     uint8_t actualBrightness = getValidBrightness(brightness, brightnessOffset, pitchBendOffset); 
     #ifdef ENABLE_SERIAL_DEBUG
       Serial.print("writing actual brightness: ");
       Serial.println(actualBrightness);
     #endif
-    for (int i = 0; i < numLamps; i++) {
+    for (int i = 0; i < NUM_LAMPS; i++) {
       dmxInterface->writeDMX(i + 1, currentMask[i] ? actualBrightness : 0);
     }
   }

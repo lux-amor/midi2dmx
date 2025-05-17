@@ -1,14 +1,13 @@
 #ifndef FADEOUT_H
 #define FADEOUT_H
 
+#include "config.h"
 #include "effect_interface.h"
 #include <math.h>
 
-#define NUM_LAMPS 5
-
 class FadeOut : public EffectInterface {
   public:
-    FadeOut(DMXInterface* dmx);
+    FadeOut(DMXInterface* dmx) : EffectInterface(dmx) {};
 
     template <size_t N>
     void FadeOut::setMask(const bool (&values)[N]) {
@@ -22,7 +21,7 @@ class FadeOut : public EffectInterface {
 
   private:
     const float fadeUpdateInterval = 5.0; //ms
-    const float fadeTimeFactor = 25.0;
+    const float fadeTimeFactor = 0.04;
     float brightnessDelta = 0;
 };
 #endif

@@ -18,14 +18,7 @@
     - Pitchbend => Brightness Offset
 */
 
-//#define ENABLE_SERIAL_DEBUG
-//#define OUTPUT_DMX_VALUES
-
-#define DMX_TX_PIN 1    // Transmit pin, connect to DI of MAX485 module
-#define DMX_DE_PIN 9    // Enable pin, connect to DE+RE of MAX485 module
-#define DMX_NUM_CHAN 5  // Number of DMX channels to use, maximum is 512 (if sufficient RAM)
-#define MIDI_CHANNEL MIDI_CHANNEL_OMNI
-
+#include "config.h"
 #include "dmx_interface.h"
 #include "fade_in.h"
 #include "fade_out.h"
@@ -40,6 +33,8 @@ DMXInterface dmx(DMX_TX_PIN, DMX_NUM_CHAN);
 FadeIn fadeIn(&dmx);
 FadeOut fadeOut(&dmx);
 Strobo strobo(&dmx);
+
+const bool defaultMask[5] = {1, 1, 1, 1, 1};
 
 void setup() {
   #ifdef ENABLE_SERIAL_DEBUG
@@ -75,13 +70,11 @@ static void OnNoteOn(byte channel, byte note, byte velocity) {
   #endif
 
   if (channel == 1) {
-    const bool defaultMask[5] = {1, 1, 1, 1, 1};
     fadeIn.setMask(defaultMask);
     fadeIn.start(note, velocity);
   }
 
   if (channel == 2) {
-    const bool defaultMask[5] = {1, 1, 1, 1, 1};
     fadeOut.setMask(defaultMask);
     fadeOut.start(note, velocity);
   }
