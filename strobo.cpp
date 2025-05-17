@@ -2,15 +2,13 @@
 
 void Strobo::onStart(byte note, byte velocity) {
   brightness = min(255, max(0, 2*(note + 1)));
-  float interval = (127 - velocity) * 2.5;
+  updateInterval = (127 - velocity) * 2.5;
   #ifdef ENABLE_SERIAL_DEBUG
     Serial.print("triggered strobo with brightness: ");
     Serial.print(brightness);
     Serial.print(" and interval: ");
-    Serial.println(interval);
+    Serial.println(updateInterval);
   #endif
-  brightness = brightness;
-  updateInterval = interval;
 }
 
 void Strobo::onUpdate() {

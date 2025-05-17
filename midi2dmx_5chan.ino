@@ -22,6 +22,7 @@
 #include "dmx_interface.h"
 #include "fade_in.h"
 #include "fade_out.h"
+#include "patterns.h"
 #include "strobo.h"
 #include <USB-MIDI.h>
 typedef USBMIDI_NAMESPACE::usbMidiTransport __umt;
@@ -33,8 +34,6 @@ DMXInterface dmx(DMX_TX_PIN, DMX_NUM_CHAN);
 FadeIn fadeIn(&dmx);
 FadeOut fadeOut(&dmx);
 Strobo strobo(&dmx);
-
-const bool defaultMask[5] = {1, 1, 1, 1, 1};
 
 void setup() {
   #ifdef ENABLE_SERIAL_DEBUG
@@ -75,8 +74,9 @@ static void OnNoteOn(byte channel, byte note, byte velocity) {
   }
 
   if (channel == 2) {
-    fadeOut.setMask(defaultMask);
-    fadeOut.start(note, velocity);
+    fadeOut.t1 = micros();
+    fadeOut.setMask(defaultMask); // 4-8 us
+    fadeOut.start(note, velocity); // ~90 us
   }
 
   if (channel == 3) {
@@ -119,12 +119,10 @@ static void OnNoteOn(byte channel, byte note, byte velocity) {
   }
 
   if (channel == 15) {
-    const bool leftMask[5] = {1, 1, 1, 0, 0};
     fadeOut.setMask(leftMask);
     fadeOut.start(note, velocity);
   }
   if (channel == 16) {
-    const bool rightMask[5] = {0, 0, 1, 1, 1};
     fadeOut.setMask(rightMask);
     fadeOut.start(note, velocity);
   }

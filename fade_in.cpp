@@ -5,8 +5,8 @@ void FadeIn::onStart(byte note, byte velocity) {
   float duration = velocity * velocity * fadeTimeFactor;
   
   if (duration != 0) {
-    float increments = (float)duration/fadeUpdateInterval;
-    brightnessDelta = (float)brightness / increments;
+    float increments = duration/updateInterval;
+    brightnessDelta = brightness / increments;
     #ifdef ENABLE_SERIAL_DEBUG
       Serial.print("triggered FadeIn with a duration of ");
       Serial.println(duration);

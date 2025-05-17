@@ -12,11 +12,9 @@ void DMXInterface::initDmxChannels() {
 }
 
 void DMXInterface::setBrightness(uint8_t brightness) {
-  writeDMX(1, brightness);
-  writeDMX(2, brightness);
-  writeDMX(3, brightness);
-  writeDMX(4, brightness);
-  writeDMX(5, brightness);
+  for (int channel = 1; channel <= numChannels; ++channel) {
+    writeDMX(channel, brightness);
+  }
 }
 
 void DMXInterface::writeDMX(uint8_t channel, uint8_t value) {
@@ -31,7 +29,5 @@ void DMXInterface::writeDMX(uint8_t channel, uint8_t value) {
 }
 
 void DMXInterface::zeroBrightness() {
-  for (int channel = 1; channel <= numChannels; ++channel) {
-    writeDMX(channel, 0);
-  }
+  setBrightness(0);
 }

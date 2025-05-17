@@ -14,11 +14,13 @@ class EffectInterface {
     void setPitchBendOffset(int bend);
     void start(byte note, byte velocity);
     void stop();
+    unsigned long t0 = 0; //profiling
+    unsigned long t1 = 0; //profiling
 
   protected:
-    uint8_t brightness = 0;
+    float brightness = 0.0;
     bool currentMask[NUM_LAMPS] = {1};
-    unsigned long updateInterval = 200.0; //ms
+    unsigned long updateInterval = 1.0; //ms
     virtual void onUpdate() = 0;
     virtual void onStart(byte note, byte velocity) = 0;
     virtual void onStop() {};
@@ -29,7 +31,7 @@ class EffectInterface {
     bool active = false;
     int8_t pitchBendOffset = 0;
     unsigned long previousMillis = 0;
-    uint8_t getValidBrightness(uint8_t brightness, float delta, int8_t offset);
+    uint8_t getValidBrightness(float brightness, float delta, int8_t offset);
 
 };
 

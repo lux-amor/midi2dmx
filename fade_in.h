@@ -14,8 +14,7 @@ class FadeIn : public EffectInterface {
     virtual void onUpdate();
 
   private:
-    const float fadeUpdateInterval = 5.0; //ms
-    const float fadeTimeFactor = 0.04;
+    const float fadeTimeFactor = 0.5;
     float brightnessDelta = 0;
 };
 #endif
